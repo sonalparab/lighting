@@ -25,20 +25,22 @@ color get_lighting( double *normal, double *view, color alight, double light[2][
 
 color calculate_ambient(color alight, double *areflect ) {
   color a;
-  a.red = alight.red * areflect[0];
-  a.green = alight.green * areflect[1];
-  a.blue = alight.blue * areflect[2];
+  a.red = (int)alight.red * areflect[0];
+  a.green = (int)alight.green * areflect[1];
+  a.blue = (int)alight.blue * areflect[2];
   return a;
 }
 
 color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
   color d;
- 
+
+  normalize(normal);
+  
   double prod = dot_product(light[0],normal);
 
-  d.red = light[1][0] * dreflect[0] * prod;
-  d.green = light[1][1] * dreflect[1] * prod;
-  d.blue = light[1][2] * dreflect[2] * prod;
+  d.red = (int)light[1][0] * dreflect[0] * prod;
+  d.green = (int)light[1][1] * dreflect[1] * prod;
+  d.blue = (int)light[1][2] * dreflect[2] * prod;
   
   return d;
 }
@@ -46,6 +48,9 @@ color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
 color calculate_specular(double light[2][3], double *sreflect, double *view, double *normal ) {
   color s;
 
+  normalize(normal);
+  normalize(view);
+  
   double scale = dot_product(normal,light[0]);
   
   double *t = (double *)malloc(3 * sizeof(double));
@@ -65,9 +70,9 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
     s.blue = 0;
   }
   else{
-    s.red = light[1][0] * sreflect[0] * pow(cosA,16);
-    s.green = light[1][1] * sreflect[1] * pow(cosA,16);
-    s.blue = light[1][2] * sreflect[2] * pow(cosA,16);
+    s.red = (int)light[1][0] * sreflect[0] * pow(cosA,8);
+    s.green = (int)light[1][1] * sreflect[1] * pow(cosA,8);
+    s.blue = (int)light[1][2] * sreflect[2] * pow(cosA,8);
   }
 
   free(t);
