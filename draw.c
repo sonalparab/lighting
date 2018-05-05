@@ -33,9 +33,9 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb, color
   y1 = points->m[1][i+1];
   y2 = points->m[1][i+2];
 
-  c.red = (23 * (i/3))%255;
-  c.green = (109 * (i/3))%255;
-  c.blue = (c.blue+(227 * (i/3)))%255;
+  //c.red = (23 * (i/3))%255;
+  //c.green = (109 * (i/3))%255;
+  //c.blue = (c.blue+(227 * (i/3)))%255;
 
   //find bot, mid, top
   if ( y0 <= y1 && y0 <= y2) {
