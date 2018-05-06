@@ -28,6 +28,9 @@ color calculate_ambient(color alight, double *areflect ) {
   a.red = (int)alight.red * areflect[RED];
   a.green = (int)alight.green * areflect[GREEN];
   a.blue = (int)alight.blue * areflect[BLUE];
+  
+  limit_color(&a);
+
   return a;
 }
 
