@@ -1,0 +1,54 @@
+#TOP
+push
+move
+250 280 0
+rotate
+y -40
+box
+-150 -50 50 300 50 100
+#LEFT LEGS
+push
+move
+-185 -100 0
+rotate
+y 30
+box
+1 0 40 20 80 50
+box
+58 0 40 20 80 50
+pop
+#RIGHT LEGS
+push
+move
+90 -100 0
+rotate
+y 30
+box
+1 0 40 20 80 50
+box
+58 0 40 20 80 50
+pop
+#CAKE
+push
+move
+0 -30 0
+torus
+0 0 0 20 100
+push
+move
+0 40 0
+torus
+0 0 0 20 75
+push
+move
+0 40 0
+torus
+0 0 0 20 50
+push
+move
+0 40 0
+torus
+0 0 0 20 25
+display
+save
+donutCake.png
