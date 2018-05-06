@@ -25,9 +25,9 @@ color get_lighting( double *normal, double *view, color alight, double light[2][
 
 color calculate_ambient(color alight, double *areflect ) {
   color a;
-  a.red = (int)alight.red * areflect[0];
-  a.green = (int)alight.green * areflect[1];
-  a.blue = (int)alight.blue * areflect[2];
+  a.red = (int)alight.red * areflect[RED];
+  a.green = (int)alight.green * areflect[GREEN];
+  a.blue = (int)alight.blue * areflect[BLUE];
   return a;
 }
 
@@ -35,12 +35,15 @@ color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
   color d;
 
   normalize(normal);
+  normalize(light[LOCATION]);
   
-  double prod = dot_product(light[0],normal);
+  double prod = dot_product(light[LOCATION],normal);
 
-  d.red = (int)light[1][0] * dreflect[0] * prod;
-  d.green = (int)light[1][1] * dreflect[1] * prod;
-  d.blue = (int)light[1][2] * dreflect[2] * prod;
+  d.red = light[COLOR][RED] * dreflect[RED] * prod;
+  d.green = light[COLOR][GREEN] * dreflect[GREEN] * prod;
+  d.blue = light[COLOR][BLUE] * dreflect[BLUE] * prod;
+
+  limit_color(&d);
   
   return d;
 }
@@ -49,18 +52,20 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
   color s;
 
   normalize(normal);
+  normalize(light[LOCATION]);
   normalize(view);
   
-  double scale = dot_product(normal,light[0]);
+  double scale = dot_product(normal,light[LOCATION]);
   
   double *t = (double *)malloc(3 * sizeof(double));
   int i;
   for(i = 0; i < 3; i++)
     t[i] = scale * normal[i];
 
+
   double *r = (double *)malloc(3 * sizeof(double));
   for(i = 0; i < 3; i++)
-    r[i] = (2 * t[i]) - light[0][i];
+    r[i] = (2 * t[i]) - light[LOCATION][i];
 
   double cosA = dot_product(r,view);
 
@@ -70,14 +75,16 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
     s.blue = 0;
   }
   else{
-    s.red = (int)light[1][0] * sreflect[0] * pow(cosA,8);
-    s.green = (int)light[1][1] * sreflect[1] * pow(cosA,8);
-    s.blue = (int)light[1][2] * sreflect[2] * pow(cosA,8);
+    s.red = light[COLOR][RED] * sreflect[RED] * pow(cosA,6);
+    s.green = light[COLOR][GREEN] * sreflect[GREEN] * pow(cosA,6);
+    s.blue = light[COLOR][BLUE] * sreflect[BLUE] * pow(cosA,6);
   }
 
   free(t);
   free(r);
-   
+
+  limit_color(&s);
+  
   return s;
 }
 
@@ -90,6 +97,12 @@ void limit_color( color * c ) {
     c->green = 255;
   if(c->blue > 255)
     c->blue = 255;
+  if(c->red < 0)
+    c->red = 0;
+  if(c->green < 0)
+    c->green = 0;
+  if(c->blue < 0)
+    c->blue = 0;
 }
 
 //vector functions
